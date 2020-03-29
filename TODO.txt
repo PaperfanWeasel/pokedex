@@ -1,0 +1,3 @@
+Add option to switch to Shiny forms
+
+Add functionality to the A/B button to cycle through different screen's such as Moves/Evolution Chain
