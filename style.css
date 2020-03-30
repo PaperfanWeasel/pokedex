@@ -107,6 +107,7 @@ body {
   color: white;
   font-size: 25px;
   font-weight: bold;
+  text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
 }
 
 .poke-id {
