@@ -4,6 +4,7 @@ const pokeName = document.querySelector('.poke-name');
 const pokeId = document.querySelector('.poke-id');
 const pokeFrontImage = document.querySelector('.poke-front-image');
 const pokeBackImage = document.querySelector('.poke-back-image');
+const pokeShinyImage = document.querySelector('.poke-shiny-image');
 const pokeTypeOne = document.querySelector('.poke-type-one');
 const pokeTypeTwo = document.querySelector('.poke-type-two');
 const pokeWeight = document.querySelector('.poke-weight');
@@ -11,6 +12,8 @@ const pokeHeight = document.querySelector('.poke-height');
 const pokeListitems = document.querySelectorAll('.list-item');
 const leftButton = document.querySelector('.left-button');
 const rightButton = document.querySelector('.right-button');
+const aButton = document.querySelector('.a_button');
+const bButton = document.querySelector('.b_button');
 
 // Constansts and Variables
 const TYPES = [
@@ -21,8 +24,10 @@ const TYPES = [
     'electric', 'psychic', 'ice',
     'dragon', 'dark', 'fairy'
 ];
+let currId = null;
 let prevUrl = null;
 let nextUrl = null;
+let isShiny = false;
 
 // Functions
 const capitalize = (str) => str[0].toUpperCase() + str.substr(1);
@@ -47,6 +52,10 @@ const resetScreen = () => {
     }
 };
 
+const refreshLeftScreen = () => {
+    fetchPokeData(currId);
+}
+
 const handleLeftButtonClick = () => {
     if (prevUrl) {
         fetchPokeList(prevUrl);
@@ -57,6 +66,21 @@ const handleRightButtonClick = () => {
     if (nextUrl) {
         fetchPokeList(nextUrl);
     }
+};
+
+const handleAButtonClick = () => {
+    if (isShiny) {
+        isShiny = false;
+        pokeShinyImage.classList.add('hide');
+    } else {
+        isShiny = true;
+        pokeShinyImage.classList.remove('hide');
+    }
+    refreshLeftScreen();
+};
+
+const handleBButtonClick = () => {
+    // not thought of a use for this yet
 };
 
 const handleListItemClick = (e) => {
@@ -100,6 +124,7 @@ const fetchPokeData = id => {
     .then(res => res.json())
     .then(data => {
             resetScreen();
+            currId = id;
 
             const dataTypes = data['types'];
             const dataFirstType = dataTypes[0];
@@ -121,8 +146,13 @@ const fetchPokeData = id => {
             pokeWeight.textContent = data['weight'];
             pokeHeight.textContent = data['height'];
 
-            pokeFrontImage.src = data['sprites']['front_default'] || '';        
-            pokeBackImage.src = data['sprites']['back_default'] || '';
+            if (!isShiny) {
+                pokeFrontImage.src = data['sprites']['front_default'] || '';        
+                pokeBackImage.src = data['sprites']['back_default'] || '';
+            } else { 
+                pokeFrontImage.src = data['sprites']['front_shiny'] || '';        
+                pokeBackImage.src = data['sprites']['back_shiny'] || '';
+            }
         });
 };
 
@@ -131,6 +161,8 @@ const fetchPokeData = id => {
 // adding event listeners
 leftButton.addEventListener('click', handleLeftButtonClick);
 rightButton.addEventListener('click', handleRightButtonClick);
+aButton.addEventListener('click', handleAButtonClick);
+bButton.addEventListener('click', handleBButtonClick);
 for (const pokeListitem of pokeListitems) {
     pokeListitem.addEventListener('click', handleListItemClick);
 };
